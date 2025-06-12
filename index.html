@@ -5,18 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alexandra</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+        body, h1, h2, h3, h4, h5, h6, p, a, li, button, input, textarea {
+            font-family: 'Jua', Arial, sans-serif;
+        }
         body {
             font-family: Arial, sans-serif;
-            background: #f7f6fa;
+            background: #e7ddff;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
+            position: relative;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: #a259c6 #e7ddff;
+        }
+        /* Custom scrollbar for Webkit browsers */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #a259c6;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e7ddff;
+        }
+        h1, h2 {
+            font-family: 'Jua', Arial, sans-serif;
         }
         h1 {
-            color: #7c6ea0;
+            color: #fff;
             margin-bottom: 24px;
+            font-size: 3rem;
+            letter-spacing: 2px;
+            text-shadow: 2px 4px 8px #7c6ea0, 0 2px 0 #a259c6;
+        }
+        h2 {
+            color: #fff;
+            font-size: 2rem;
+            letter-spacing: 1px;
+            text-shadow: 1px 2px 6px #7c6ea0, 0 1px 0 #e7ddff;
+            margin-bottom: 16px;
         }
         img {
             border-radius: 16px;
@@ -25,10 +58,276 @@
             width: 100%;
             height: auto;
         }
+        /* Navigation Bar Styles */
+        nav {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            padding: 0;
+            margin: 0;
+        }
+        nav a {
+            text-decoration: none;
+            color: #7c6ea0;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #a259c6;
+        }
+        /* About Me Section Styles */
+        #about-me {
+            margin-top: 40px;
+            width: 100%;
+            max-width: 600px;
+            color: #7c6ea0;
+            font-family: 'Luckiest Guy', cursive, Arial, sans-serif;
+            font-size: 1.5rem;
+            line-height: 1.6;
+            text-shadow: 1px 2px 4px rgba(124, 110, 160, 0.2);
+        }
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0.8;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
     <h1>Alexandra</h1>
-    <img src="https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=800&q=80" alt="Magnolia Flower">
+    <img src="1642018588509.webp" alt="Custom Image">
+    
+    <!-- Navigation Bar -->
+    <nav>
+        <ul style="list-style: none; display: flex; gap: 20px; padding: 0; margin-bottom: 32px;">
+            <li><a href="#about-me">About Me</a></li>
+            <li><a href="#my-favorite-books">My Favorite Books</a></li>
+            <li><a href="#games">Games</a></li>
+        </ul>
+    </nav>
+
+    <!-- About Me Section -->
+    <section id="about-me" style="margin-top: 40px; width: 100%; max-width: 600px;">
+        <h2>About Me</h2>
+        <p>
+            I am 14 years old and a Leo. I love to read, crochet, play Stardew Valley, and bake! I have two dogs and two younger siblings. I live with my siblings, parents, poodles, and aunt. I attend Cypress Falls High School, and I am excited to learn more in this class!
+        </p>
+    </section>
+
+    <!-- My Favorite Books Section -->
+    <section id="my-favorite-books" style="margin-top: 40px; width: 100%; max-width: 600px;">
+        <h2>My Favorite Books</h2>
+        <ul style="color: #7c6ea0; font-size: 1.3rem;">
+            <li>Solitaire</li>
+            <li>Loveless</li>
+            <li>Percy Jackson</li>
+        </ul>
+    </section>
+
+    <!-- Games Section -->
+    <section id="games" style="margin-top: 40px; width: 100%; max-width: 600px;">
+        <h2>Games</h2>
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <canvas id="snake-game" width="400" height="400" style="background: #222; border-radius: 8px;"></canvas>
+            <button id="restart-snake" style="margin-top: 12px; padding: 8px 16px; border-radius: 6px; border: none; background: #a259c6; color: #fff; font-size: 1rem; cursor: pointer;">Restart Game</button>
+        </div>
+        <script>
+        // Simple Snake Game
+        const canvas = document.getElementById('snake-game');
+        const ctx = canvas.getContext('2d');
+        const box = 20;
+        let snake = [{ x: 9 * box, y: 10 * box }];
+        let direction = null;
+        let food = { x: Math.floor(Math.random() * 20) * box, y: Math.floor(Math.random() * 20) * box };
+        let score = 0;
+        let gameInterval;
+
+        function draw() {
+            ctx.fillStyle = '#222';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < snake.length; i++) {
+                ctx.fillStyle = i === 0 ? '#a259c6' : '#fff';
+                ctx.fillRect(snake[i].x, snake[i].y, box, box);
+            }
+            ctx.fillStyle = '#e7ddff';
+            ctx.fillRect(food.x, food.y, box, box);
+            ctx.fillStyle = '#fff';
+            ctx.font = '18px Arial';
+            ctx.fillText('Score: ' + score, 10, 390);
+        }
+
+        function moveSnake() {
+            let head = { x: snake[0].x, y: snake[0].y };
+            if (direction === 'LEFT') head.x -= box;
+            if (direction === 'UP') head.y -= box;
+            if (direction === 'RIGHT') head.x += box;
+            if (direction === 'DOWN') head.y += box;
+
+            // Game over conditions
+            if (
+                head.x < 0 || head.x >= canvas.width ||
+                head.y < 0 || head.y >= canvas.height ||
+                snake.some((segment, idx) => idx !== 0 && segment.x === head.x && segment.y === head.y)
+            ) {
+                clearInterval(gameInterval);
+                alert('Game Over! Your score: ' + score);
+                return;
+            }
+
+            snake.unshift(head);
+            if (head.x === food.x && head.y === food.y) {
+                score++;
+                food = {
+                    x: Math.floor(Math.random() * 20) * box,
+                    y: Math.floor(Math.random() * 20) * box
+                };
+            } else {
+                snake.pop();
+            }
+            draw();
+        }
+
+        function keyDownHandler(e) {
+            if (e.key === 'ArrowLeft' && direction !== 'RIGHT') direction = 'LEFT';
+            if (e.key === 'ArrowUp' && direction !== 'DOWN') direction = 'UP';
+            if (e.key === 'ArrowRight' && direction !== 'LEFT') direction = 'RIGHT';
+            if (e.key === 'ArrowDown' && direction !== 'UP') direction = 'DOWN';
+        }
+
+        function startGame() {
+            snake = [{ x: 9 * box, y: 10 * box }];
+            direction = null;
+            food = { x: Math.floor(Math.random() * 20) * box, y: Math.floor(Math.random() * 20) * box };
+            score = 0;
+            draw();
+            clearInterval(gameInterval);
+            gameInterval = setInterval(() => {
+                if (direction) moveSnake();
+            }, 120);
+        }
+
+        document.addEventListener('keydown', keyDownHandler);
+        document.getElementById('restart-snake').onclick = startGame;
+        startGame();
+        </script>
+
+        <!-- Fire & Water Game (2-Player) -->
+        <div style="display: flex; flex-direction: column; align-items: center; margin-top: 40px;">
+            <h3 style="color: #a259c6;">Fire & Water Game (2-Player)</h3>
+            <canvas id="firewater-game" width="400" height="300" style="background: #222; border-radius: 8px; margin-bottom: 12px;"></canvas>
+            <div style="color: #7c6ea0; font-size: 1rem; margin-bottom: 8px;">
+                <strong>Controls:</strong> <br>
+                Fire (Red): W/A/S/D &nbsp; | &nbsp; Water (Blue): Arrow Keys
+            </div>
+        </div>
+        <script>
+        // Simple Fire & Water 2-Player Platformer
+        const fwCanvas = document.getElementById('firewater-game');
+        const fwCtx = fwCanvas.getContext('2d');
+        const fwGround = 260;
+        const fwPlayers = [
+            { x: 60, y: fwGround, color: 'red', vx: 0, vy: 0, left: 'a', right: 'd', up: 'w', onGround: true }, // Fire
+            { x: 320, y: fwGround, color: 'blue', vx: 0, vy: 0, left: 'ArrowLeft', right: 'ArrowRight', up: 'ArrowUp', onGround: true } // Water
+        ];
+        const fwGravity = 0.7;
+        const fwSpeed = 2.5;
+        const fwJump = -8;
+        const fwWidth = 24, fwHeight = 32;
+        const fwPlatforms = [
+            { x: 0, y: fwGround + fwHeight, w: 400, h: 40 },
+            { x: 100, y: 200, w: 80, h: 12 },
+            { x: 220, y: 140, w: 100, h: 12 }
+        ];
+        function fwDraw() {
+            fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+            // Draw platforms
+            fwCtx.fillStyle = '#a259c6';
+            fwPlatforms.forEach(p => fwCtx.fillRect(p.x, p.y, p.w, p.h));
+            // Draw players
+            fwPlayers.forEach(p => {
+                fwCtx.fillStyle = p.color;
+                fwCtx.fillRect(p.x, p.y, fwWidth, fwHeight);
+            });
+        }
+        function fwUpdate() {
+            fwPlayers.forEach(p => {
+                // Horizontal movement
+                p.x += p.vx;
+                // Gravity
+                p.vy += fwGravity;
+                p.y += p.vy;
+                p.onGround = false;
+                // Platform collision
+                fwPlatforms.forEach(plat => {
+                    if (
+                        p.x + fwWidth > plat.x && p.x < plat.x + plat.w &&
+                        p.y + fwHeight > plat.y && p.y + fwHeight - p.vy <= plat.y
+                    ) {
+                        p.y = plat.y - fwHeight;
+                        p.vy = 0;
+                        p.onGround = true;
+                    }
+                });
+                // Boundaries
+                if (p.x < 0) p.x = 0;
+                if (p.x + fwWidth > fwCanvas.width) p.x = fwCanvas.width - fwWidth;
+                if (p.y + fwHeight > fwCanvas.height) {
+                    p.y = fwCanvas.height - fwHeight;
+                    p.vy = 0;
+                    p.onGround = true;
+                }
+            });
+        }
+        const fwKeys = {};
+        document.addEventListener('keydown', e => { fwKeys[e.key] = true; });
+        document.addEventListener('keyup', e => { fwKeys[e.key] = false; });
+        function fwHandleInput() {
+            // Fire
+            fwPlayers[0].vx = 0;
+            if (fwKeys[fwPlayers[0].left]) fwPlayers[0].vx = -fwSpeed;
+            if (fwKeys[fwPlayers[0].right]) fwPlayers[0].vx = fwSpeed;
+            if (fwKeys[fwPlayers[0].up] && fwPlayers[0].onGround) fwPlayers[0].vy = fwJump;
+            // Water
+            fwPlayers[1].vx = 0;
+            if (fwKeys[fwPlayers[1].left]) fwPlayers[1].vx = -fwSpeed;
+            if (fwKeys[fwPlayers[1].right]) fwPlayers[1].vx = fwSpeed;
+            if (fwKeys[fwPlayers[1].up] && fwPlayers[1].onGround) fwPlayers[1].vy = fwJump;
+        }
+        function fwGameLoop() {
+            fwHandleInput();
+            fwUpdate();
+            fwDraw();
+            requestAnimationFrame(fwGameLoop);
+        }
+        fwGameLoop();
+        </script>
+    </section>
+
+    <script>
+    // Star background effect
+    function createStars(numStars = 80) {
+        for (let i = 0; i < numStars; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 2 + 1;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.top = `${Math.random() * 100}vh`;
+            star.style.left = `${Math.random() * 100}vw`;
+            star.style.boxShadow = `0 0 ${Math.random() * 8 + 2}px #fff`;
+            document.body.appendChild(star);
+        }
+    }
+    createStars();
+    </script>
 </body>
 </html>
