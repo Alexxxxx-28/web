@@ -65,6 +65,7 @@
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
+            margin-bottom: 32px;
         }
         nav ul {
             list-style: none;
@@ -100,219 +101,369 @@
             opacity: 0.8;
             pointer-events: none;
         }
+        /* Focus styles for accessibility */
+        a:focus, button:focus, input:focus {
+            outline: 3px solid #ffb347;
+            outline-offset: 2px;
+        }
+        /* High contrast for important elements */
+        h1, h2, h3, nav a, button {
+            text-shadow: none;
+        }
+        /* Skip link styles */
+        .skip-link {
+            position: absolute;
+            left: -999px;
+            top: 10px;
+            background: #fff;
+            color: #a259c6;
+            padding: 8px 16px;
+            z-index: 2000;
+            border-radius: 6px;
+        }
+        .skip-link:focus {
+            left: 10px;
+        }
     </style>
 </head>
 <body>
-    <h1>Alexandra</h1>
-    <img src="1642018588509.webp" alt="Custom Image">
-    
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <h1 id="main-content" tabindex="-1">Alexandra</h1>
+    <img src="1642018588509.webp" alt="A personal photo or avatar for Alexandra" role="img" aria-label="Alexandra's photo">
     <!-- Navigation Bar -->
-    <nav>
-        <ul style="list-style: none; display: flex; gap: 20px; padding: 0; margin-bottom: 32px;">
-            <li><a href="#about-me">About Me</a></li>
-            <li><a href="#my-favorite-books">My Favorite Books</a></li>
-            <li><a href="#games">Games</a></li>
-        </ul>
+    <nav aria-label="Main navigation" style="margin-bottom: 32px;">
+        <div role="tablist" aria-label="Sections" style="display: flex; gap: 20px;">
+            <button role="tab" id="tab-about" aria-selected="true" aria-controls="tabpanel-about" tabindex="0" style="background: #a259c6; color: #fff; border: none; border-radius: 6px; padding: 8px 16px; font-size: 1rem; cursor: pointer;">About Me</button>
+            <button role="tab" id="tab-books" aria-selected="false" aria-controls="tabpanel-books" tabindex="-1" style="background: #7c6ea0; color: #fff; border: none; border-radius: 6px; padding: 8px 16px; font-size: 1rem; cursor: pointer;">My Favorite Books</button>
+            <button role="tab" id="tab-games" aria-selected="false" aria-controls="tabpanel-games" tabindex="-1" style="background: #7c6ea0; color: #fff; border: none; border-radius: 6px; padding: 8px 16px; font-size: 1rem; cursor: pointer;">Games</button>
+        </div>
     </nav>
-
-    <!-- About Me Section -->
-    <section id="about-me" style="margin-top: 40px; width: 100%; max-width: 600px;">
+    <section id="tabpanel-about" role="tabpanel" aria-labelledby="tab-about" style="display: block; margin-top: 40px; width: 100%; max-width: 600px;">
         <h2>About Me</h2>
         <p>
             I am 14 years old and a Leo. I love to read, crochet, play Stardew Valley, and bake! I have two dogs and two younger siblings. I live with my siblings, parents, poodles, and aunt. I attend Cypress Falls High School, and I am excited to learn more in this class!
         </p>
     </section>
-
-    <!-- My Favorite Books Section -->
-    <section id="my-favorite-books" style="margin-top: 40px; width: 100%; max-width: 600px;">
+    <section id="tabpanel-books" role="tabpanel" aria-labelledby="tab-books" style="display: none; margin-top: 40px; width: 100%; max-width: 600px;">
         <h2>My Favorite Books</h2>
-        <ul style="color: #7c6ea0; font-size: 1.3rem;">
-            <li>Solitaire</li>
-            <li>Loveless</li>
-            <li>Percy Jackson</li>
+        <ul style="color: #7c6ea0; font-size: 1.3rem; list-style: none; padding: 0;">
+            <li style="display: flex; align-items: center; margin-bottom: 18px;">
+                <img src="81OK2uJxNCL.jpg" alt="Cover of Solitaire by Alice Oseman" style="width: 60px; height: 90px; object-fit: cover; margin-right: 16px; border-radius: 8px; box-shadow: 0 2px 8px #ccc;" />
+                <span><strong>Solitaire</strong> by Alice Oseman</span>
+            </li>
+            <li style="display: flex; align-items: center; margin-bottom: 18px;">
+                <img src="HIHp_Loveless_1.jpg" alt="Cover of Loveless by Alice Oseman" style="width: 60px; height: 90px; object-fit: cover; margin-right: 16px; border-radius: 8px; box-shadow: 0 2px 8px #ccc;" />
+                <span><strong>Loveless</strong> by Alice Oseman</span>
+            </li>
+            <li style="display: flex; align-items: center; margin-bottom: 18px;">
+                <img src="91WN6a6F3RL._UF1000,1000_QL80_.jpg" alt="Cover of Percy Jackson by Rick Riordan" style="width: 60px; height: 90px; object-fit: cover; margin-right: 16px; border-radius: 8px; box-shadow: 0 2px 8px #ccc;" />
+                <span><strong>Percy Jackson</strong> by Rick Riordan</span>
+            </li>
+            <li style="display: flex; align-items: center; margin-bottom: 18px;">
+                <img src="images.jpeg" alt="Cover of Cinderella is Dead by Kalynn Bayron" style="width: 60px; height: 90px; object-fit: cover; margin-right: 16px; border-radius: 8px; box-shadow: 0 2px 8px #ccc;" />
+                <span><strong>Cinderella is Dead</strong> by Kalynn Bayron</span>
+            </li>
         </ul>
     </section>
-
-    <!-- Games Section -->
-    <section id="games" style="margin-top: 40px; width: 100%; max-width: 600px;">
+    <section id="tabpanel-games" role="tabpanel" aria-labelledby="tab-games" style="display: none; margin-top: 40px; width: 100%; max-width: 600px;">
         <h2>Games</h2>
         <div style="display: flex; flex-direction: column; align-items: center;">
-            <canvas id="snake-game" width="400" height="400" style="background: #222; border-radius: 8px;"></canvas>
-            <button id="restart-snake" style="margin-top: 12px; padding: 8px 16px; border-radius: 6px; border: none; background: #a259c6; color: #fff; font-size: 1rem; cursor: pointer;">Restart Game</button>
+            <canvas id="snake-game" width="400" height="400" style="background: #222; border-radius: 8px;" tabindex="0" aria-label="Snake game canvas" role="img"></canvas>
+            <button id="restart-snake" style="margin-top: 12px; padding: 8px 16px; border-radius: 6px; border: none; background: #a259c6; color: #fff; font-size: 1rem; cursor: pointer;" aria-label="Restart Snake Game">Restart Game</button>
         </div>
-        <script>
-        // Simple Snake Game
-        const canvas = document.getElementById('snake-game');
-        const ctx = canvas.getContext('2d');
-        const box = 20;
-        let snake = [{ x: 9 * box, y: 10 * box }];
-        let direction = null;
-        let food = { x: Math.floor(Math.random() * 20) * box, y: Math.floor(Math.random() * 20) * box };
-        let score = 0;
-        let gameInterval;
-
-        function draw() {
-            ctx.fillStyle = '#222';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < snake.length; i++) {
-                ctx.fillStyle = i === 0 ? '#a259c6' : '#fff';
-                ctx.fillRect(snake[i].x, snake[i].y, box, box);
-            }
-            ctx.fillStyle = '#e7ddff';
-            ctx.fillRect(food.x, food.y, box, box);
-            ctx.fillStyle = '#fff';
-            ctx.font = '18px Arial';
-            ctx.fillText('Score: ' + score, 10, 390);
-        }
-
-        function moveSnake() {
-            let head = { x: snake[0].x, y: snake[0].y };
-            if (direction === 'LEFT') head.x -= box;
-            if (direction === 'UP') head.y -= box;
-            if (direction === 'RIGHT') head.x += box;
-            if (direction === 'DOWN') head.y += box;
-
-            // Game over conditions
-            if (
-                head.x < 0 || head.x >= canvas.width ||
-                head.y < 0 || head.y >= canvas.height ||
-                snake.some((segment, idx) => idx !== 0 && segment.x === head.x && segment.y === head.y)
-            ) {
-                clearInterval(gameInterval);
-                alert('Game Over! Your score: ' + score);
-                return;
-            }
-
-            snake.unshift(head);
-            if (head.x === food.x && head.y === food.y) {
-                score++;
-                food = {
-                    x: Math.floor(Math.random() * 20) * box,
-                    y: Math.floor(Math.random() * 20) * box
-                };
-            } else {
-                snake.pop();
-            }
-            draw();
-        }
-
-        function keyDownHandler(e) {
-            if (e.key === 'ArrowLeft' && direction !== 'RIGHT') direction = 'LEFT';
-            if (e.key === 'ArrowUp' && direction !== 'DOWN') direction = 'UP';
-            if (e.key === 'ArrowRight' && direction !== 'LEFT') direction = 'RIGHT';
-            if (e.key === 'ArrowDown' && direction !== 'UP') direction = 'DOWN';
-        }
-
-        function startGame() {
-            snake = [{ x: 9 * box, y: 10 * box }];
-            direction = null;
-            food = { x: Math.floor(Math.random() * 20) * box, y: Math.floor(Math.random() * 20) * box };
-            score = 0;
-            draw();
-            clearInterval(gameInterval);
-            gameInterval = setInterval(() => {
-                if (direction) moveSnake();
-            }, 120);
-        }
-
-        document.addEventListener('keydown', keyDownHandler);
-        document.getElementById('restart-snake').onclick = startGame;
-        startGame();
-        </script>
-
-        <!-- Fire & Water Game (2-Player) -->
         <div style="display: flex; flex-direction: column; align-items: center; margin-top: 40px;">
-            <h3 style="color: #a259c6;">Fire & Water Game (2-Player)</h3>
-            <canvas id="firewater-game" width="400" height="300" style="background: #222; border-radius: 8px; margin-bottom: 12px;"></canvas>
+            <h3 style="color: #a259c6;" id="firewater-heading">Fire & Water Game (2-Player)</h3>
+            <canvas id="firewater-game" width="400" height="300" style="background: #222; border-radius: 8px; margin-bottom: 12px;" tabindex="0" aria-label="Fire and Water 2-Player Game Canvas" role="img"></canvas>
+            <button id="restart-fw" style="margin-bottom: 12px; padding: 8px 16px; border-radius: 6px; border: none; background: #a259c6; color: #fff; font-size: 1rem; cursor: pointer;" aria-label="Restart Fire and Water Game">Restart Game</button>
             <div style="color: #7c6ea0; font-size: 1rem; margin-bottom: 8px;">
                 <strong>Controls:</strong> <br>
                 Fire (Red): W/A/S/D &nbsp; | &nbsp; Water (Blue): Arrow Keys
             </div>
         </div>
-        <script>
-        // Simple Fire & Water 2-Player Platformer
-        const fwCanvas = document.getElementById('firewater-game');
-        const fwCtx = fwCanvas.getContext('2d');
-        const fwGround = 260;
-        const fwPlayers = [
-            { x: 60, y: fwGround, color: 'red', vx: 0, vy: 0, left: 'a', right: 'd', up: 'w', onGround: true }, // Fire
-            { x: 320, y: fwGround, color: 'blue', vx: 0, vy: 0, left: 'ArrowLeft', right: 'ArrowRight', up: 'ArrowUp', onGround: true } // Water
-        ];
-        const fwGravity = 0.7;
-        const fwSpeed = 2.5;
-        const fwJump = -8;
-        const fwWidth = 24, fwHeight = 32;
-        const fwPlatforms = [
-            { x: 0, y: fwGround + fwHeight, w: 400, h: 40 },
-            { x: 100, y: 200, w: 80, h: 12 },
-            { x: 220, y: 140, w: 100, h: 12 }
-        ];
-        function fwDraw() {
-            fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
-            // Draw platforms
-            fwCtx.fillStyle = '#a259c6';
-            fwPlatforms.forEach(p => fwCtx.fillRect(p.x, p.y, p.w, p.h));
-            // Draw players
-            fwPlayers.forEach(p => {
-                fwCtx.fillStyle = p.color;
-                fwCtx.fillRect(p.x, p.y, fwWidth, fwHeight);
+    </section>
+    <script>
+    // Tab switching logic
+    const tabs = [
+        { tab: document.getElementById('tab-about'), panel: document.getElementById('tabpanel-about') },
+        { tab: document.getElementById('tab-books'), panel: document.getElementById('tabpanel-books') },
+        { tab: document.getElementById('tab-games'), panel: document.getElementById('tabpanel-games') }
+    ];
+    tabs.forEach(({ tab }, idx) => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(({ tab, panel }, i) => {
+                const selected = i === idx;
+                tab.setAttribute('aria-selected', selected);
+                tab.setAttribute('tabindex', selected ? '0' : '-1');
+                panel.style.display = selected ? 'block' : 'none';
             });
+            tab.focus();
+        });
+        tab.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight') {
+                tabs[(idx + 1) % tabs.length].tab.focus();
+            } else if (e.key === 'ArrowLeft') {
+                tabs[(idx + tabs.length - 1) % tabs.length].tab.focus();
+            }
+        });
+    });
+    // Simple Snake Game
+    const canvas = document.getElementById('snake-game');
+    const ctx = canvas.getContext('2d');
+    const box = 20;
+    let snake = [{ x: 9 * box, y: 10 * box }];
+    let direction = null;
+    let food = { x: Math.floor(Math.random() * 20) * box, y: Math.floor(Math.random() * 20) * box };
+    let score = 0;
+    let gameInterval;
+
+    function draw() {
+        ctx.fillStyle = '#222';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < snake.length; i++) {
+            ctx.fillStyle = i === 0 ? '#a259c6' : '#fff';
+            ctx.fillRect(snake[i].x, snake[i].y, box, box);
         }
-        function fwUpdate() {
-            fwPlayers.forEach(p => {
-                // Horizontal movement
-                p.x += p.vx;
-                // Gravity
-                p.vy += fwGravity;
-                p.y += p.vy;
-                p.onGround = false;
-                // Platform collision
-                fwPlatforms.forEach(plat => {
-                    if (
-                        p.x + fwWidth > plat.x && p.x < plat.x + plat.w &&
-                        p.y + fwHeight > plat.y && p.y + fwHeight - p.vy <= plat.y
-                    ) {
-                        p.y = plat.y - fwHeight;
-                        p.vy = 0;
-                        p.onGround = true;
-                    }
-                });
-                // Boundaries
-                if (p.x < 0) p.x = 0;
-                if (p.x + fwWidth > fwCanvas.width) p.x = fwCanvas.width - fwWidth;
-                if (p.y + fwHeight > fwCanvas.height) {
-                    p.y = fwCanvas.height - fwHeight;
+        ctx.fillStyle = '#e7ddff';
+        ctx.fillRect(food.x, food.y, box, box);
+        ctx.fillStyle = '#fff';
+        ctx.font = '18px Arial';
+        ctx.fillText('Score: ' + score, 10, 390);
+    }
+
+    function moveSnake() {
+        let head = { x: snake[0].x, y: snake[0].y };
+        if (direction === 'LEFT') head.x -= box;
+        if (direction === 'UP') head.y -= box;
+        if (direction === 'RIGHT') head.x += box;
+        if (direction === 'DOWN') head.y += box;
+
+        // Game over conditions
+        if (
+            head.x < 0 || head.x >= canvas.width ||
+            head.y < 0 || head.y >= canvas.height ||
+            snake.some((segment, idx) => idx !== 0 && segment.x === head.x && segment.y === head.y)
+        ) {
+            clearInterval(gameInterval);
+            alert('Game Over! Your score: ' + score);
+            return;
+        }
+
+        snake.unshift(head);
+        if (head.x === food.x && head.y === food.y) {
+            score++;
+            food = {
+                x: Math.floor(Math.random() * 20) * box,
+                y: Math.floor(Math.random() * 20) * box
+            };
+        } else {
+            snake.pop();
+        }
+        draw();
+    }
+
+    function keyDownHandler(e) {
+        if (e.key === 'ArrowLeft' && direction !== 'RIGHT') direction = 'LEFT';
+        if (e.key === 'ArrowUp' && direction !== 'DOWN') direction = 'UP';
+        if (e.key === 'ArrowRight' && direction !== 'LEFT') direction = 'RIGHT';
+        if (e.key === 'ArrowDown' && direction !== 'UP') direction = 'DOWN';
+    }
+
+    function startGame() {
+        snake = [{ x: 9 * box, y: 10 * box }];
+        direction = null;
+        food = { x: Math.floor(Math.random() * 20) * box, y: Math.floor(Math.random() * 20) * box };
+        score = 0;
+        draw();
+        clearInterval(gameInterval);
+        gameInterval = setInterval(() => {
+            if (direction) moveSnake();
+        }, 120);
+    }
+
+    document.addEventListener('keydown', keyDownHandler);
+    document.getElementById('restart-snake').onclick = startGame;
+    startGame();
+    // Simple Fire & Water 2-Player Platformer
+    const fwCanvas = document.getElementById('firewater-game');
+    const fwCtx = fwCanvas.getContext('2d');
+    const fwGround = 260;
+    const fwWidth = 24, fwHeight = 32;
+    const fwGravity = 0.7;
+    const fwSpeed = 2.7; // slightly faster
+    const fwJump = -10; // higher jump
+    // Easier levels: fewer obstacles, more platforms, more time
+    const fwLevels = [
+        {
+            platforms: [
+                { x: 0, y: fwGround + fwHeight, w: 400, h: 40 },
+                { x: 100, y: 220, w: 100, h: 14 },
+                { x: 240, y: 160, w: 120, h: 14 }
+            ],
+            obstacles: [
+                { x: 180, y: 260, w: 30, h: 20 }
+            ],
+            goal: { x: 370, y: 128, w: 20, h: 32 }
+        },
+        {
+            platforms: [
+                { x: 0, y: fwGround + fwHeight, w: 400, h: 40 },
+                { x: 60, y: 180, w: 80, h: 14 },
+                { x: 200, y: 120, w: 120, h: 14 },
+                { x: 340, y: 60, w: 40, h: 14 }
+            ],
+            obstacles: [
+                { x: 250, y: 108, w: 30, h: 12 }
+            ],
+            goal: { x: 370, y: 28, w: 20, h: 32 }
+        }
+    ];
+    let fwLevel = 0;
+    let fwPlatforms, fwObstacles, fwGoal, fwPlayers, fwTimer, fwTimerInterval;
+    function fwResetLevel() {
+        fwPlatforms = JSON.parse(JSON.stringify(fwLevels[fwLevel].platforms));
+        fwObstacles = JSON.parse(JSON.stringify(fwLevels[fwLevel].obstacles));
+        fwGoal = { ...fwLevels[fwLevel].goal };
+        fwPlayers = [
+            { x: 60, y: fwGround, color: 'red', vx: 0, vy: 0, left: 'a', right: 'd', up: 'w', onGround: true, reachedGoal: false },
+            { x: 320, y: fwGround, color: 'blue', vx: 0, vy: 0, left: 'ArrowLeft', right: 'ArrowRight', up: 'ArrowUp', onGround: true, reachedGoal: false }
+        ];
+        fwTimer = 45; // more time
+    }
+    function fwDraw() {
+        fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+        // Draw platforms
+        fwCtx.fillStyle = '#a259c6';
+        fwPlatforms.forEach(p => fwCtx.fillRect(p.x, p.y, p.w, p.h));
+        // Draw obstacles
+        fwCtx.fillStyle = '#ffb347';
+        fwObstacles.forEach(o => fwCtx.fillRect(o.x, o.y, o.w, o.h));
+        // Draw goal
+        fwCtx.fillStyle = '#00ff99';
+        fwCtx.fillRect(fwGoal.x, fwGoal.y, fwGoal.w, fwGoal.h);
+        // Draw players
+        fwPlayers.forEach(p => {
+            fwCtx.fillStyle = p.color;
+            fwCtx.fillRect(p.x, p.y, fwWidth, fwHeight);
+        });
+        // Draw timer and level
+        fwCtx.fillStyle = '#fff';
+        fwCtx.font = '16px Arial';
+        fwCtx.fillText('Level: ' + (fwLevel + 1), 10, 20);
+        fwCtx.fillText('Timer: ' + fwTimer, 320, 20);
+    }
+    function fwUpdate() {
+        fwPlayers.forEach(p => {
+            // Horizontal movement
+            p.x += p.vx;
+            // Gravity
+            p.vy += fwGravity;
+            p.y += p.vy;
+            p.onGround = false;
+            // Platform collision
+            fwPlatforms.forEach(plat => {
+                if (
+                    p.x + fwWidth > plat.x && p.x < plat.x + plat.w &&
+                    p.y + fwHeight > plat.y && p.y + fwHeight - p.vy <= plat.y
+                ) {
+                    p.y = plat.y - fwHeight;
                     p.vy = 0;
                     p.onGround = true;
                 }
             });
+            // Boundaries
+            if (p.x < 0) p.x = 0;
+            if (p.x + fwWidth > fwCanvas.width) p.x = fwCanvas.width - fwWidth;
+            if (p.y + fwHeight > fwCanvas.height) {
+                p.y = fwCanvas.height - fwHeight;
+                p.vy = 0;
+                p.onGround = true;
+            }
+            // Obstacle collision (reset to start)
+            fwObstacles.forEach(o => {
+                if (
+                    p.x + fwWidth > o.x && p.x < o.x + o.w &&
+                    p.y + fwHeight > o.y && p.y < o.y + o.h
+                ) {
+                    p.x = p.color === 'red' ? 60 : 320;
+                    p.y = fwGround;
+                    p.vx = 0;
+                    p.vy = 0;
+                }
+            });
+            // Goal check
+            if (
+                p.x + fwWidth > fwGoal.x && p.x < fwGoal.x + fwGoal.w &&
+                p.y + fwHeight > fwGoal.y && p.y < fwGoal.y + fwGoal.h
+            ) {
+                p.reachedGoal = true;
+            } else {
+                p.reachedGoal = false;
+            }
+        });
+    }
+    const fwKeys = {};
+    document.addEventListener('keydown', e => {
+        fwKeys[e.key] = true;
+        // Prevent arrow keys from scrolling
+        if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)) {
+            e.preventDefault();
         }
-        const fwKeys = {};
-        document.addEventListener('keydown', e => { fwKeys[e.key] = true; });
-        document.addEventListener('keyup', e => { fwKeys[e.key] = false; });
-        function fwHandleInput() {
-            // Fire
-            fwPlayers[0].vx = 0;
-            if (fwKeys[fwPlayers[0].left]) fwPlayers[0].vx = -fwSpeed;
-            if (fwKeys[fwPlayers[0].right]) fwPlayers[0].vx = fwSpeed;
-            if (fwKeys[fwPlayers[0].up] && fwPlayers[0].onGround) fwPlayers[0].vy = fwJump;
-            // Water
-            fwPlayers[1].vx = 0;
-            if (fwKeys[fwPlayers[1].left]) fwPlayers[1].vx = -fwSpeed;
-            if (fwKeys[fwPlayers[1].right]) fwPlayers[1].vx = fwSpeed;
-            if (fwKeys[fwPlayers[1].up] && fwPlayers[1].onGround) fwPlayers[1].vy = fwJump;
+    }, { passive: false });
+    document.addEventListener('keyup', e => { fwKeys[e.key] = false; });
+    function fwHandleInput() {
+        // Fire
+        fwPlayers[0].vx = 0;
+        if (fwKeys[fwPlayers[0].left]) fwPlayers[0].vx = -fwSpeed;
+        if (fwKeys[fwPlayers[0].right]) fwPlayers[0].vx = fwSpeed;
+        if (fwKeys[fwPlayers[0].up] && fwPlayers[0].onGround) fwPlayers[0].vy = fwJump;
+        // Water
+        fwPlayers[1].vx = 0;
+        if (fwKeys[fwPlayers[1].left]) fwPlayers[1].vx = -fwSpeed;
+        if (fwKeys[fwPlayers[1].right]) fwPlayers[1].vx = fwSpeed;
+        if (fwKeys[fwPlayers[1].up] && fwPlayers[1].onGround) fwPlayers[1].vy = fwJump;
+    }
+    function fwNextLevel() {
+        fwLevel++;
+        if (fwLevel >= fwLevels.length) {
+            alert('Congratulations! You completed all levels!');
+            fwLevel = 0;
         }
-        function fwGameLoop() {
-            fwHandleInput();
-            fwUpdate();
-            fwDraw();
-            requestAnimationFrame(fwGameLoop);
+        fwResetLevel();
+    }
+    function fwStartTimer() {
+        clearInterval(fwTimerInterval);
+        fwTimerInterval = setInterval(() => {
+            fwTimer--;
+            if (fwTimer <= 0) {
+                clearInterval(fwTimerInterval);
+                alert('Time is up! Restarting level.');
+                fwResetLevel();
+            }
+        }, 1000);
+    }
+    function fwRestartGame() {
+        fwLevel = 0;
+        fwResetLevel();
+        fwStartTimer();
+    }
+    document.getElementById('restart-fw').onclick = fwRestartGame;
+    function fwGameLoop() {
+        fwHandleInput();
+        fwUpdate();
+        fwDraw();
+        // If both players reached the goal, go to next level
+        if (fwPlayers[0].reachedGoal && fwPlayers[1].reachedGoal) {
+            clearInterval(fwTimerInterval);
+            setTimeout(() => {
+                fwNextLevel();
+                fwStartTimer();
+            }, 500);
         }
-        fwGameLoop();
-        </script>
-    </section>
-
-    <script>
+        requestAnimationFrame(fwGameLoop);
+    }
+    fwResetLevel();
+    fwStartTimer();
+    fwGameLoop();
     // Star background effect
     function createStars(numStars = 80) {
         for (let i = 0; i < numStars; i++) {
@@ -328,6 +479,20 @@
         }
     }
     createStars();
+    // Announce timer for screen readers
+    function announceTimer(timer) {
+        let live = document.getElementById('timer-live');
+        if (!live) {
+            live = document.createElement('div');
+            live.id = 'timer-live';
+            live.setAttribute('aria-live', 'polite');
+            live.style.position = 'absolute';
+            live.style.left = '-9999px';
+            document.body.appendChild(live);
+        }
+        live.textContent = 'Timer: ' + timer + ' seconds left';
+    }
     </script>
+    <div id="timer-live" aria-live="polite" style="position: absolute; left: -9999px;"></div>
 </body>
 </html>
