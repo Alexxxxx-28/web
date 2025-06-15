@@ -60,12 +60,16 @@
         }
         /* Navigation Bar Styles */
         nav {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            background: #e7ddff;
             z-index: 1000;
-            margin-bottom: 32px;
+            display: flex;
+            justify-content: center;
+            box-shadow: 0 2px 8px #a259c633;
+            padding: 12px 0;
         }
         nav ul {
             list-style: none;
@@ -130,14 +134,15 @@
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <h1 id="main-content" tabindex="-1">Alexandra</h1>
     <img src="1642018588509.webp" alt="A personal photo or avatar for Alexandra" role="img" aria-label="Alexandra's photo">
-    <!-- Navigation Bar -->
-    <nav aria-label="Main navigation" style="margin-bottom: 32px;">
+    <!-- Navigation Bar (fixed at top, not overlapping title) -->
+    <nav aria-label="Main navigation" id="main-nav" style="position: fixed; top: 0; left: 0; width: 100vw; background: #e7ddff; z-index: 1000; display: flex; justify-content: center; box-shadow: 0 2px 8px #a259c633; padding: 12px 0;">
         <div role="tablist" aria-label="Sections" style="display: flex; gap: 20px;">
             <button role="tab" id="tab-about" aria-selected="true" aria-controls="tabpanel-about" tabindex="0" style="background: #a259c6; color: #fff; border: none; border-radius: 6px; padding: 8px 16px; font-size: 1rem; cursor: pointer;">About Me</button>
-            <button role="tab" id="tab-books" aria-selected="false" aria-controls="tabpanel-books" tabindex="-1" style="background: #7c6ea0; color: #fff; border: none; border-radius: 6px; padding: 8px 16px; font-size: 1rem; cursor: pointer;">My Favorite Books</button>
+            <button role="tab" id="tab-books" aria-selected="false" aria-controls="tabpanel-books" tabindex="-1" style="background: #7c6ea0; color: #fff; border: none; border-radius: 6px; padding: 8px 16px; font-size: 1rem; cursor: pointer;">My Favorites</button>
             <button role="tab" id="tab-games" aria-selected="false" aria-controls="tabpanel-games" tabindex="-1" style="background: #7c6ea0; color: #fff; border: none; border-radius: 6px; padding: 8px 16px; font-size: 1rem; cursor: pointer;">Games</button>
         </div>
     </nav>
+    <div style="height: 60px;"></div> <!-- Spacer to prevent overlap with fixed nav -->
     <section id="tabpanel-about" role="tabpanel" aria-labelledby="tab-about" style="display: block; margin-top: 40px; width: 100%; max-width: 600px;">
         <h2>About Me</h2>
         <p>
@@ -145,7 +150,8 @@
         </p>
     </section>
     <section id="tabpanel-books" role="tabpanel" aria-labelledby="tab-books" style="display: none; margin-top: 40px; width: 100%; max-width: 600px;">
-        <h2>My Favorite Books</h2>
+        <h2>My Favorites</h2>
+        <h3 style="color: #a259c6; margin-bottom: 10px;">Books</h3>
         <ul style="color: #7c6ea0; font-size: 1.3rem; list-style: none; padding: 0;">
             <li style="display: flex; align-items: center; margin-bottom: 18px;">
                 <img src="81OK2uJxNCL.jpg" alt="Cover of Solitaire by Alice Oseman" style="width: 60px; height: 90px; object-fit: cover; margin-right: 16px; border-radius: 8px; box-shadow: 0 2px 8px #ccc;" />
@@ -162,6 +168,24 @@
             <li style="display: flex; align-items: center; margin-bottom: 18px;">
                 <img src="images.jpeg" alt="Cover of Cinderella is Dead by Kalynn Bayron" style="width: 60px; height: 90px; object-fit: cover; margin-right: 16px; border-radius: 8px; box-shadow: 0 2px 8px #ccc;" />
                 <span><strong>Cinderella is Dead</strong> by Kalynn Bayron</span>
+            </li>
+        </ul>
+        <h3 style="color: #a259c6; margin-top: 24px; margin-bottom: 10px;">Shows/Movies</h3>
+        <ul style="color: #7c6ea0; font-size: 1.3rem; list-style: none; padding: 0;">
+            <li style="margin-bottom: 14px; display: flex; align-items: center;">
+                <span>Shadows House</span>
+            </li>
+            <li style="margin-bottom: 14px; display: flex; align-items: center;">
+                <span>Wicked</span>
+            </li>
+            <li style="margin-bottom: 14px; display: flex; align-items: center;">
+                <span>The Simpsons</span>
+            </li>
+            <li style="margin-bottom: 14px; display: flex; align-items: center;">
+                <span>The Barbie Movie</span>
+            </li>
+            <li style="margin-bottom: 14px; display: flex; align-items: center;">
+                <span>Modern Family</span>
             </li>
         </ul>
     </section>
@@ -181,6 +205,7 @@
             </div>
         </div>
     </section>
+    <div id="timer-live" aria-live="polite" style="position: absolute; left: -9999px; display: none;"></div>
     <script>
     // Tab switching logic
     const tabs = [
@@ -188,6 +213,10 @@
         { tab: document.getElementById('tab-books'), panel: document.getElementById('tabpanel-books') },
         { tab: document.getElementById('tab-games'), panel: document.getElementById('tabpanel-games') }
     ];
+    const timerLive = document.getElementById('timer-live');
+    function setTimerLiveVisible(visible) {
+        timerLive.style.display = visible ? 'block' : 'none';
+    }
     tabs.forEach(({ tab }, idx) => {
         tab.addEventListener('click', () => {
             tabs.forEach(({ tab, panel }, i) => {
@@ -196,6 +225,8 @@
                 tab.setAttribute('tabindex', selected ? '0' : '-1');
                 panel.style.display = selected ? 'block' : 'none';
             });
+            // Show timer/notifications only on Games tab
+            setTimerLiveVisible(idx === 2);
             tab.focus();
         });
         tab.addEventListener('keydown', e => {
@@ -206,6 +237,8 @@
             }
         });
     });
+    // On load, only show timer if Games tab is active
+    setTimerLiveVisible(false);
     // Simple Snake Game
     const canvas = document.getElementById('snake-game');
     const ctx = canvas.getContext('2d');
@@ -318,7 +351,7 @@
         }
     ];
     let fwLevel = 0;
-    let fwPlatforms, fwObstacles, fwGoal, fwPlayers, fwTimer, fwTimerInterval;
+    let fwPlatforms, fwObstacles, fwGoal, fwPlayers;
     function fwResetLevel() {
         fwPlatforms = JSON.parse(JSON.stringify(fwLevels[fwLevel].platforms));
         fwObstacles = JSON.parse(JSON.stringify(fwLevels[fwLevel].obstacles));
@@ -327,7 +360,6 @@
             { x: 60, y: fwGround, color: 'red', vx: 0, vy: 0, left: 'a', right: 'd', up: 'w', onGround: true, reachedGoal: false },
             { x: 320, y: fwGround, color: 'blue', vx: 0, vy: 0, left: 'ArrowLeft', right: 'ArrowRight', up: 'ArrowUp', onGround: true, reachedGoal: false }
         ];
-        fwTimer = 45; // more time
     }
     function fwDraw() {
         fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
@@ -345,11 +377,10 @@
             fwCtx.fillStyle = p.color;
             fwCtx.fillRect(p.x, p.y, fwWidth, fwHeight);
         });
-        // Draw timer and level
+        // Draw level only (timer removed)
         fwCtx.fillStyle = '#fff';
         fwCtx.font = '16px Arial';
         fwCtx.fillText('Level: ' + (fwLevel + 1), 10, 20);
-        fwCtx.fillText('Timer: ' + fwTimer, 320, 20);
     }
     function fwUpdate() {
         fwPlayers.forEach(p => {
@@ -430,21 +461,9 @@
         }
         fwResetLevel();
     }
-    function fwStartTimer() {
-        clearInterval(fwTimerInterval);
-        fwTimerInterval = setInterval(() => {
-            fwTimer--;
-            if (fwTimer <= 0) {
-                clearInterval(fwTimerInterval);
-                alert('Time is up! Restarting level.');
-                fwResetLevel();
-            }
-        }, 1000);
-    }
     function fwRestartGame() {
         fwLevel = 0;
         fwResetLevel();
-        fwStartTimer();
     }
     document.getElementById('restart-fw').onclick = fwRestartGame;
     function fwGameLoop() {
@@ -453,16 +472,13 @@
         fwDraw();
         // If both players reached the goal, go to next level
         if (fwPlayers[0].reachedGoal && fwPlayers[1].reachedGoal) {
-            clearInterval(fwTimerInterval);
             setTimeout(() => {
                 fwNextLevel();
-                fwStartTimer();
             }, 500);
         }
         requestAnimationFrame(fwGameLoop);
     }
     fwResetLevel();
-    fwStartTimer();
     fwGameLoop();
     // Star background effect
     function createStars(numStars = 80) {
@@ -479,20 +495,6 @@
         }
     }
     createStars();
-    // Announce timer for screen readers
-    function announceTimer(timer) {
-        let live = document.getElementById('timer-live');
-        if (!live) {
-            live = document.createElement('div');
-            live.id = 'timer-live';
-            live.setAttribute('aria-live', 'polite');
-            live.style.position = 'absolute';
-            live.style.left = '-9999px';
-            document.body.appendChild(live);
-        }
-        live.textContent = 'Timer: ' + timer + ' seconds left';
-    }
     </script>
-    <div id="timer-live" aria-live="polite" style="position: absolute; left: -9999px;"></div>
 </body>
 </html>
