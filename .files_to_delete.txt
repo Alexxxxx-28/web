@@ -1,0 +1,4 @@
+about.html
+books.html
+games.html
+style.css
