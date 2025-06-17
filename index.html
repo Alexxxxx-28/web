@@ -197,7 +197,10 @@
     <section id="tabpanel-games" role="tabpanel" aria-labelledby="tab-games" style="display: none; margin-top: 40px; width: 100%; max-width: 600px;">
         <h2>Games</h2>
         <div style="display: flex; flex-direction: column; align-items: center;">
-            <canvas id="snake-game" width="400" height="400" style="background: #222; border-radius: 8px;" tabindex="0" aria-label="Snake game canvas" role="img"></canvas>
+            <div style="position: relative;">
+                <canvas id="snake-game" width="400" height="400" style="background: #222; border-radius: 8px;" tabindex="0" aria-label="Snake game canvas" role="img"></canvas>
+                <button id="fullscreen-snake" style="position: absolute; top: 8px; right: 8px; z-index: 2;">⛶</button>
+            </div>
             <button id="restart-snake" style="margin-top: 12px; padding: 8px 16px; border-radius: 6px; border: none; background: #a259c6; color: #fff; font-size: 1rem; cursor: pointer;" aria-label="Restart Snake Game">Restart Game</button>
         </div>
         <div style="display: flex; flex-direction: column; align-items: center; margin-top: 40px;">
