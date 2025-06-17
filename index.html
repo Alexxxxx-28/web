@@ -211,7 +211,10 @@
         </div>
         <div style="display: flex; flex-direction: column; align-items: center; margin-top: 40px;">
             <h3 style="color: #a259c6;" id="flappy-mouse-heading">Flappy Mouse</h3>
-            <canvas id="flappy-mouse-game" width="400" height="500" style="background: #e7ddff; border-radius: 8px; margin-bottom: 12px; box-shadow: 0 2px 8px #a259c633;" tabindex="0" aria-label="Flappy Mouse Game Canvas" role="img"></canvas>
+            <div style="position: relative;">
+                <canvas id="flappy-mouse-game" width="400" height="500" style="background: #e7ddff; border-radius: 8px; margin-bottom: 12px; box-shadow: 0 2px 8px #a259c633;" tabindex="0" aria-label="Flappy Mouse Game Canvas" role="img"></canvas>
+                <button id="fullscreen-flappy-mouse" style="position: absolute; top: 8px; right: 8px; z-index: 2;">⛶</button>
+            </div>
             <button id="restart-flappy-mouse" style="margin-bottom: 12px; padding: 8px 16px; border-radius: 6px; border: none; background: #a259c6; color: #fff; font-size: 1rem; cursor: pointer;" aria-label="Restart Flappy Mouse Game">Restart Game</button>
             <div style="color: #7c6ea0; font-size: 1rem; margin-bottom: 8px;">
                 <strong>Controls:</strong> Spacebar or click/tap to jump
@@ -219,7 +222,10 @@
         </div>
         <div style="display: flex; flex-direction: column; align-items: center; margin-top: 40px;">
             <h3 style="color: #a259c6;" id="pong-heading">Pong</h3>
-            <canvas id="pong-game" width="400" height="300" style="background: #222; border-radius: 8px; margin-bottom: 12px; box-shadow: 0 2px 8px #a259c633;" tabindex="0" aria-label="Pong Game Canvas" role="img"></canvas>
+            <div style="position: relative;">
+                <canvas id="pong-game" width="400" height="300" style="background: #222; border-radius: 8px; margin-bottom: 12px; box-shadow: 0 2px 8px #a259c633;" tabindex="0" aria-label="Pong Game Canvas" role="img"></canvas>
+                <button id="fullscreen-pong" style="position: absolute; top: 8px; right: 8px; z-index: 2;">⛶</button>
+            </div>
             <button id="restart-pong" style="margin-bottom: 12px; padding: 8px 16px; border-radius: 6px; border: none; background: #a259c6; color: #fff; font-size: 1rem; cursor: pointer;" aria-label="Restart Pong Game">Restart Game</button>
             <div style="color: #7c6ea0; font-size: 1rem; margin-bottom: 8px;">
                 <strong>Controls:</strong> W/S for left paddle, Up/Down arrows for right paddle
@@ -501,13 +507,12 @@
     }
     fwResetLevel();
     fwGameLoop();
-    // Flappy Mouse Game
+    // Flappy Mouse Game (robust start)
     const flappyCanvas = document.getElementById('flappy-mouse-game');
     const flappyCtx = flappyCanvas.getContext('2d');
-    const mouseImg = new Image();
-    mouseImg.src = 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Mouse_cartoon_01.png'; // Cartoon mouse
+    const mouseImg = new window.Image();
+    mouseImg.src = 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Mouse_cartoon_01.png';
     let flappyMouse, flappyPipes, flappyScore, flappyGravity, flappyGameOver, flappyInterval;
-
     function resetFlappyMouse() {
         flappyMouse = { x: 60, y: 250, w: 40, h: 40, vy: 0 };
         flappyPipes = [];
@@ -517,18 +522,19 @@
         if (flappyInterval) clearInterval(flappyInterval);
         flappyInterval = setInterval(updateFlappyMouse, 1000/60);
     }
-
     function drawFlappyMouse() {
         flappyCtx.clearRect(0, 0, flappyCanvas.width, flappyCanvas.height);
-        // Draw mouse
-        flappyCtx.drawImage(mouseImg, flappyMouse.x, flappyMouse.y, flappyMouse.w, flappyMouse.h);
-        // Draw pipes
+        if (mouseImg.complete && mouseImg.naturalWidth > 0) {
+            flappyCtx.drawImage(mouseImg, flappyMouse.x, flappyMouse.y, flappyMouse.w, flappyMouse.h);
+        } else {
+            flappyCtx.fillStyle = '#a259c6';
+            flappyCtx.fillRect(flappyMouse.x, flappyMouse.y, flappyMouse.w, flappyMouse.h);
+        }
         flappyPipes.forEach(pipe => {
             flappyCtx.fillStyle = '#a259c6';
             flappyCtx.fillRect(pipe.x, 0, pipe.w, pipe.top);
             flappyCtx.fillRect(pipe.x, pipe.bottom, pipe.w, flappyCanvas.height - pipe.bottom);
         });
-        // Draw score
         flappyCtx.fillStyle = '#7c6ea0';
         flappyCtx.font = '28px Jua, Arial, sans-serif';
         flappyCtx.fillText('Score: ' + flappyScore, 20, 40);
@@ -538,22 +544,17 @@
             flappyCtx.fillText('Game Over!', 110, 250);
         }
     }
-
     function updateFlappyMouse() {
         if (flappyGameOver) return;
         flappyMouse.vy += flappyGravity;
         flappyMouse.y += flappyMouse.vy;
-        // Add pipes
         if (flappyPipes.length === 0 || flappyPipes[flappyPipes.length-1].x < 220) {
             const gap = 120;
             const top = Math.random() * 220 + 40;
             flappyPipes.push({ x: 400, w: 60, top: top, bottom: top + gap, passed: false });
         }
-        // Move pipes
         flappyPipes.forEach(pipe => pipe.x -= 2.5);
-        // Remove off-screen pipes
         if (flappyPipes[0] && flappyPipes[0].x + flappyPipes[0].w < 0) flappyPipes.shift();
-        // Collision
         for (const pipe of flappyPipes) {
             if (
                 flappyMouse.x + flappyMouse.w > pipe.x && flappyMouse.x < pipe.x + pipe.w &&
@@ -567,42 +568,39 @@
                 pipe.passed = true;
             }
         }
-        // Ground/ceiling collision
         if (flappyMouse.y < 0 || flappyMouse.y + flappyMouse.h > flappyCanvas.height) {
             flappyGameOver = true;
             clearInterval(flappyInterval);
         }
         drawFlappyMouse();
     }
-
     function flapMouse() {
         if (flappyGameOver) return;
         flappyMouse.vy = -8;
     }
-
     flappyCanvas.addEventListener('mousedown', flapMouse);
     flappyCanvas.addEventListener('touchstart', flapMouse);
     document.addEventListener('keydown', e => {
-        if (document.activeElement === flappyCanvas && (e.code === 'Space' || e.key === ' ')) {
+        if (e.code === 'Space' || e.key === ' ') {
             flapMouse();
         }
     });
     document.getElementById('restart-flappy-mouse').onclick = resetFlappyMouse;
     mouseImg.onload = resetFlappyMouse;
     mouseImg.onerror = resetFlappyMouse;
-    // Ensure the game starts even if the image is cached or fails to load
-    if (mouseImg.complete) {
-        resetFlappyMouse();
-    }
-    // Pong Game
+    if (mouseImg.complete) resetFlappyMouse();
+    document.getElementById('fullscreen-flappy-mouse').onclick = () => {
+        if (flappyCanvas.requestFullscreen) flappyCanvas.requestFullscreen();
+    };
+    // Pong Game (improved controls)
     const pongCanvas = document.getElementById('pong-game');
     const pongCtx = pongCanvas.getContext('2d');
     let pongBall, pongPaddles, pongScore, pongInterval, pongGameOver;
     function resetPong() {
         pongBall = { x: 200, y: 150, vx: 3, vy: 2, r: 10 };
         pongPaddles = [
-            { x: 10, y: 120, w: 12, h: 60, vy: 0 }, // Left
-            { x: 378, y: 120, w: 12, h: 60, vy: 0 } // Right
+            { x: 10, y: 120, w: 12, h: 60, vy: 0 },
+            { x: 378, y: 120, w: 12, h: 60, vy: 0 }
         ];
         pongScore = [0, 0];
         pongGameOver = false;
@@ -611,17 +609,14 @@
     }
     function drawPong() {
         pongCtx.clearRect(0, 0, pongCanvas.width, pongCanvas.height);
-        // Draw paddles
         pongPaddles.forEach(p => {
             pongCtx.fillStyle = '#a259c6';
             pongCtx.fillRect(p.x, p.y, p.w, p.h);
         });
-        // Draw ball
         pongCtx.beginPath();
         pongCtx.arc(pongBall.x, pongBall.y, pongBall.r, 0, 2 * Math.PI);
         pongCtx.fillStyle = '#fff';
         pongCtx.fill();
-        // Draw score
         pongCtx.fillStyle = '#7c6ea0';
         pongCtx.font = '24px Jua, Arial, sans-serif';
         pongCtx.fillText(pongScore[0], 120, 30);
@@ -634,19 +629,15 @@
     }
     function updatePong() {
         if (pongGameOver) return;
-        // Move paddles
         pongPaddles[0].y += pongPaddles[0].vy;
         pongPaddles[1].y += pongPaddles[1].vy;
         pongPaddles.forEach(p => {
             if (p.y < 0) p.y = 0;
             if (p.y + p.h > pongCanvas.height) p.y = pongCanvas.height - p.h;
         });
-        // Move ball
         pongBall.x += pongBall.vx;
         pongBall.y += pongBall.vy;
-        // Wall collision
         if (pongBall.y - pongBall.r < 0 || pongBall.y + pongBall.r > pongCanvas.height) pongBall.vy *= -1;
-        // Paddle collision
         pongPaddles.forEach((p, i) => {
             if (
                 pongBall.x - pongBall.r < p.x + p.w && pongBall.x + pongBall.r > p.x &&
@@ -657,27 +648,42 @@
                 pongBall.x = i === 0 ? p.x + p.w + pongBall.r : p.x - pongBall.r;
             }
         });
-        // Score
         if (pongBall.x < 0) { pongScore[1]++; resetPong(); }
         if (pongBall.x > pongCanvas.width) { pongScore[0]++; resetPong(); }
         drawPong();
     }
+    let pongKeys = {};
     document.addEventListener('keydown', e => {
-        if (document.activeElement === pongCanvas) {
-            if (e.key === 'w' || e.key === 'W') pongPaddles[0].vy = -5;
-            if (e.key === 's' || e.key === 'S') pongPaddles[0].vy = 5;
-            if (e.key === 'ArrowUp') pongPaddles[1].vy = -5;
-            if (e.key === 'ArrowDown') pongPaddles[1].vy = 5;
-        }
+        pongKeys[e.key] = true;
+        if (e.key === 'w' || e.key === 'W') pongPaddles[0].vy = -5;
+        if (e.key === 's' || e.key === 'S') pongPaddles[0].vy = 5;
+        if (e.key === 'ArrowUp') pongPaddles[1].vy = -5;
+        if (e.key === 'ArrowDown') pongPaddles[1].vy = 5;
     });
     document.addEventListener('keyup', e => {
-        if (document.activeElement === pongCanvas) {
-            if (e.key === 'w' || e.key === 'W' || e.key === 's' || e.key === 'S') pongPaddles[0].vy = 0;
-            if (e.key === 'ArrowUp' || e.key === 'ArrowDown') pongPaddles[1].vy = 0;
-        }
+        pongKeys[e.key] = false;
+        if (!pongKeys['w'] && !pongKeys['W'] && !pongKeys['s'] && !pongKeys['S']) pongPaddles[0].vy = 0;
+        if (!pongKeys['ArrowUp'] && !pongKeys['ArrowDown']) pongPaddles[1].vy = 0;
     });
     document.getElementById('restart-pong').onclick = resetPong;
+    document.getElementById('fullscreen-pong').onclick = () => {
+        if (pongCanvas.requestFullscreen) pongCanvas.requestFullscreen();
+    };
     resetPong();
+    // Fire & Water: More platforms
+    fwLevels[0].platforms.push(
+        { x: 30, y: 100, w: 60, h: 14 },
+        { x: 300, y: 60, w: 60, h: 14 }
+    );
+    fwLevels[1].platforms.push(
+        { x: 120, y: 80, w: 60, h: 14 },
+        { x: 250, y: 200, w: 60, h: 14 }
+    );
+    // Fullscreen for Fire & Water
+    document.getElementById('restart-fw').insertAdjacentHTML('afterend', '<button id="fullscreen-fw" style="margin-left: 8px; border-radius: 6px; border: none; background: #a259c6; color: #fff; font-size: 1rem; cursor: pointer;">⛶</button>');
+    document.getElementById('fullscreen-fw').onclick = () => {
+        if (fwCanvas.requestFullscreen) fwCanvas.requestFullscreen();
+    };
     // Star background effect
     function createStars(numStars = 80) {
         for (let i = 0; i < numStars; i++) {
